@@ -13,7 +13,6 @@ gallery_list = [{
 
 ]
 
-var total_items = gallery_list.length
 
 right_angle_icon_style = " \
     position: absolute; \
@@ -100,7 +99,7 @@ function lightboxOverlay(index){
     
         i2 = document.createElement("i")
         i2.className="fa fa-angle-left left-angle"
-        i2.id = "left-angle"
+        i2.id = `left-angle-${index}`
         i2.ariaHidden="true"
         i2.style=`${ left_angle_icon_style }`
     
@@ -211,11 +210,16 @@ function lightboxOverlay(index){
     
 
 var box = document.getElementById("lightBoxWrapper");
-
 var lightBoxChildren = Object.values(box.children);
+var total_items = gallery_list.length
+
+var index = 0;
+var inside = false;
 
 lightBoxChildren.map((lightBoxChild, index)=>{
     lightBoxChild.addEventListener("click", ()=>{
+        index = index;
+        inside = true
 
         document.getElementById("overlay").append(lightboxOverlay(index))
 
@@ -224,39 +228,41 @@ lightBoxChildren.map((lightBoxChild, index)=>{
             document.getElementById("overlay-1").remove()
         })
 
-        // -------------------------- left angle for slide--------------------------
+       
+            // -------------------------- left angle for slide--------------------------
         document.getElementById(`left-angle-${index}`).addEventListener("click", (e)=>{
-            console.log("removed",index)
-
             if(index <= (total_items) && (index > 0)){
                 console.log("removed")
                 index -= 1
-                node_to_remove = document.getElementById("overlay-1").remove()
-                // document.getElementById("overlay").removeChild(node_to_remove)             
+                node_to_remove = document.getElementById("overlay-1")
+                document.getElementById("overlay").removeChild(node_to_remove)             
                 document.getElementById("overlay").append(lightboxOverlay(index))
             }
             else if(index == 0 ){
                 index = total_items - 1
-                document.getElementById("overlay-image").src = `${ gallery_list[total_items - 1].src }`
+                node_to_remove = document.getElementById("overlay-1")
+                document.getElementById("overlay").removeChild(node_to_remove)             
+                document.getElementById("overlay").append(lightboxOverlay(index))
             }
         })
         
         // -------------------------- right angle for slide--------------------------
         document.getElementById("right-angle").addEventListener("click", (e)=>{
-            console.log("right button clicked!!")
             if(index < (total_items - 1)){
                 index += 1;
                 document.getElementById("overlay-image").src = `${ gallery_list[index].src } `
             }else if(index == (total_items - 1)){
                 index = 0;
                 document.getElementById("overlay-image").src = `${ gallery_list[index].src } `
-                // index = 0;
             }
-        })
-
+    })
 
     })
 
 })
 
+
+if(inside){
+ 
+}
 
